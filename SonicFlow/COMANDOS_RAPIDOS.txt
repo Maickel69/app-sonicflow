@@ -1,0 +1,106 @@
+╔═══════════════════════════════════════════════════════════════╗
+║          SONICFLOW - COMANDOS RÁPIDOS (CMD)                   ║
+║                  Tarjeta de Referencia                        ║
+╚═══════════════════════════════════════════════════════════════╝
+
+┌───────────────────────────────────────────────────────────────┐
+│ 1️⃣  ABRIR CMD EN LA CARPETA CORRECTA                          │
+└───────────────────────────────────────────────────────────────┘
+
+   • En el Explorador, ve a:
+     C:\Users\HP\Downloads\musicFree\SonicFlow
+
+   • Haz clic en la barra de dirección, escribe: cmd
+   • Presiona Enter
+
+   ✅ Ya estás listo para ejecutar comandos
+
+
+┌───────────────────────────────────────────────────────────────┐
+│ ▶️  ARRANCAR EL SERVIDOR Y LA PÁGINA                          │
+└───────────────────────────────────────────────────────────────┘
+
+   npm run dev
+
+   💡 Luego abre el navegador en: http://localhost:5173
+
+
+┌───────────────────────────────────────────────────────────────┐
+│ ⏸️  DETENER TODO                                              │
+└───────────────────────────────────────────────────────────────┘
+
+   Ctrl + C
+
+   (Si pregunta S/N, escribe: S y presiona Enter)
+
+
+┌───────────────────────────────────────────────────────────────┐
+│ 🔄 REINICIAR                                                   │
+└───────────────────────────────────────────────────────────────┘
+
+   Opción 1 (Manual):
+     1. Ctrl + C
+     2. npm run dev
+
+   Opción 2 (Automático):
+     taskkill /F /IM node.exe & npm run dev
+
+
+┌───────────────────────────────────────────────────────────────┐
+│ 🛠️  COMANDOS ÚTILES                                           │
+└───────────────────────────────────────────────────────────────┘
+
+   Limpiar pantalla:
+     cls
+
+   Ver si está corriendo:
+     netstat -ano | findstr :3000
+
+   Matar todos los procesos Node:
+     taskkill /F /IM node.exe
+
+
+┌───────────────────────────────────────────────────────────────┐
+│ ❌ ERRORES COMUNES                                            │
+└───────────────────────────────────────────────────────────────┘
+
+   "Error: listen EADDRINUSE"
+   → El puerto ya está en uso
+   → Ejecuta: taskkill /F /IM node.exe
+   → Luego: npm run dev
+
+   "npm no se reconoce"
+   → Node.js no está instalado
+   → Descarga de: https://nodejs.org/
+
+   La página no carga:
+   → Espera 10-15 segundos
+   → Recarga con: Ctrl + F5
+   → Verifica la URL: http://localhost:5173
+
+
+┌───────────────────────────────────────────────────────────────┐
+│ 🎯 FLUJO NORMAL DE TRABAJO                                    │
+└───────────────────────────────────────────────────────────────┘
+
+   1. Abrir CMD en la carpeta del proyecto
+   2. Ejecutar: npm run dev
+   3. Esperar mensaje: "VITE ready" y "Server Listening"
+   4. Abrir navegador: http://localhost:5173
+   5. Usar la aplicación
+   6. Al terminar: Ctrl + C
+
+
+┌───────────────────────────────────────────────────────────────┐
+│ 💡 CONSEJOS                                                    │
+└───────────────────────────────────────────────────────────────┘
+
+   • NO cierres la ventana del CMD mientras usas la app
+   • Copia y pega los comandos para evitar errores
+   • Si algo falla, reinicia con Ctrl+C → npm run dev
+   • Lee los mensajes de error, te dicen qué pasó
+
+
+╔═══════════════════════════════════════════════════════════════╗
+║  Para más detalles, lee: GUIA_COMANDOS.md                     ║
+╚═══════════════════════════════════════════════════════════════╝

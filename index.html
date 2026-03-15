@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SonicFlow — Descargador de Música y Videos</title>
+  <meta name="description" content="SonicFlow es un descargador gratuito de música y videos para Windows. Descarga desde YouTube y Spotify en MP3 o MP4 con un solo clic." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="icon" href="Descarga-Sonicflow/assets/icon.png" type="image/png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --purple: #8b5cf6;
+      --purple-light: #a78bfa;
+      --purple-dark: #6d28d9;
+      --pink: #ec4899;
+      --bg: #0a0a14;
+      --bg2: #0f0f1e;
+      --bg3: #141428;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --border: rgba(139,92,246,0.2);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem;
+      background: rgba(10,10,20,0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .logo {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-weight: 800; font-size: 1.25rem;
+      background: linear-gradient(135deg, var(--purple-light), var(--pink));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    nav .logo img { width: 32px; height: 32px; border-radius: 8px; }
+    nav .nav-badge {
+      font-size: 0.75rem; font-weight: 600; padding: 0.3rem 0.8rem;
+      border-radius: 999px; background: var(--border);
+      color: var(--purple-light); border: 1px solid var(--border);
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 8rem 1.5rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* animated background blobs */
+    .blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); opacity: 0.35; pointer-events: none; animation: drift 12s ease-in-out infinite;
+    }
+    .blob-1 { width: 600px; height: 600px; background: var(--purple-dark); top: -150px; left: -200px; animation-delay: 0s; }
+    .blob-2 { width: 500px; height: 500px; background: var(--pink); bottom: -100px; right: -150px; animation-delay: -5s; }
+    .blob-3 { width: 400px; height: 400px; background: #1e3a8a; top: 40%; left: 30%; animation-delay: -8s; }
+    @keyframes drift {
+      0%, 100% { transform: translate(0,0) scale(1); }
+      33% { transform: translate(30px,-20px) scale(1.05); }
+      66% { transform: translate(-20px,30px) scale(0.95); }
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(139,92,246,0.15); border: 1px solid var(--border);
+      border-radius: 999px; padding: 0.4rem 1rem;
+      font-size: 0.8rem; font-weight: 600; color: var(--purple-light);
+      margin-bottom: 1.5rem;
+    }
+    .hero-badge span { animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      font-weight: 900; line-height: 1.05;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+      max-width: 800px;
+    }
+    .hero h1 .gradient {
+      background: linear-gradient(135deg, var(--purple-light) 0%, var(--pink) 60%, #f97316 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.2rem); color: var(--text-muted);
+      max-width: 560px; line-height: 1.7; margin-bottom: 2.5rem;
+    }
+
+    /* ─── DOWNLOAD BUTTON ─── */
+    .btn-download {
+      position: relative; display: inline-flex; align-items: center; gap: 0.75rem;
+      background: linear-gradient(135deg, var(--purple) 0%, #6d28d9 50%, #4c1d95 100%);
+      color: #fff; text-decoration: none;
+      font-size: 1.1rem; font-weight: 700;
+      padding: 1rem 2.2rem;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: 0 0 40px rgba(139,92,246,0.5), 0 4px 24px rgba(0,0,0,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .btn-download::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .btn-download:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 0 60px rgba(139,92,246,0.7), 0 8px 32px rgba(0,0,0,0.5); }
+    .btn-download:hover::before { opacity: 1; }
+    .btn-download:active { transform: translateY(0) scale(0.99); }
+    .btn-download svg { width: 22px; height: 22px; flex-shrink: 0; }
+    .btn-download .btn-label { display: flex; flex-direction: column; text-align: left; }
+    .btn-download .btn-label small { font-size: 0.7rem; font-weight: 400; opacity: 0.75; }
+
+    .hero-meta {
+      margin-top: 1rem; font-size: 0.8rem; color: var(--text-muted);
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .hero-meta span { display: flex; align-items: center; gap: 0.3rem; }
+
+    /* ─── SCREENSHOT ─── */
+    .screenshot-wrap {
+      position: relative; margin: 4rem auto 0; max-width: 900px; width: 100%;
+      border-radius: 16px; overflow: hidden;
+      box-shadow: 0 0 0 1px var(--border), 0 30px 80px rgba(0,0,0,0.6);
+    }
+    .screenshot-wrap img { width: 100%; display: block; }
+    .screenshot-glow {
+      position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(to bottom, transparent 50%, var(--bg) 100%);
+    }
+
+    /* ─── FEATURES ─── */
+    .section { padding: 6rem 1.5rem; max-width: 1100px; margin: 0 auto; }
+    .section-title { text-align: center; font-size: clamp(1.8rem,4vw,2.8rem); font-weight: 800; margin-bottom: 0.75rem; }
+    .section-sub  { text-align: center; color: var(--text-muted); max-width: 500px; margin: 0 auto 3rem; font-size: 1rem; }
+
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;
+    }
+    .feature-card {
+      background: var(--bg3); border: 1px solid var(--border);
+      border-radius: 20px; padding: 1.75rem;
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px); border-color: var(--purple);
+      box-shadow: 0 8px 30px rgba(139,92,246,0.15);
+    }
+    .feature-icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; margin-bottom: 1rem;
+    }
+    .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .feature-card p  { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* ─── STEPS ─── */
+    .steps { display: flex; flex-direction: column; gap: 1.25rem; max-width: 620px; margin: 0 auto; }
+    .step {
+      display: flex; align-items: flex-start; gap: 1.25rem;
+      background: var(--bg3); border: 1px solid var(--border); border-radius: 16px; padding: 1.4rem;
+      transition: border-color 0.2s;
+    }
+    .step:hover { border-color: var(--purple); }
+    .step-num {
+      width: 40px; height: 40px; border-radius: 12px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1rem;
+    }
+    .step h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .step p  { font-size: 0.85rem; color: var(--text-muted); line-height: 1.55; }
+
+    /* ─── CTA ─── */
+    .cta {
+      text-align: center; padding: 6rem 1.5rem;
+      position: relative; overflow: hidden;
+    }
+    .cta-card {
+      max-width: 700px; margin: 0 auto;
+      background: linear-gradient(135deg, rgba(109,40,217,0.3), rgba(76,29,149,0.2));
+      border: 1px solid var(--border); border-radius: 28px; padding: 3.5rem 2rem;
+      position: relative;
+    }
+    .cta-card h2 { font-size: clamp(1.6rem,4vw,2.4rem); font-weight: 800; margin-bottom: 0.75rem; }
+    .cta-card p  { color: var(--text-muted); margin-bottom: 2rem; font-size: 1rem; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      text-align: center; padding: 2rem; font-size: 0.8rem; color: var(--text-muted);
+      border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--purple-light); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--purple-dark); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <img src="Descarga-Sonicflow/assets/icon.png" alt="SonicFlow icon" />
+    SonicFlow
+  </div>
+  <span class="nav-badge">v1.0.0 · Windows</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+
+  <div class="hero-badge">
+    <span>●</span> 100% Gratis · Código abierto
+  </div>
+
+  <h1>
+    Descarga música &amp; videos<br/>
+    <span class="gradient">en segundos</span>
+  </h1>
+
+  <p class="hero-sub">
+    SonicFlow convierte cualquier link de <strong>YouTube</strong> o <strong>Spotify</strong>
+    en un archivo MP3 o MP4 de alta calidad — sin límites, sin suscripción.
+  </p>
+
+  <a id="btn-main-download"
+     href="https://github.com/Maickel69/app-sonicflow/releases/latest/download/SonicFlow-Setup-1.0.0.exe"
+     class="btn-download">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="7 10 12 15 17 10"/>
+      <line x1="12" y1="15" x2="12" y2="3"/>
+    </svg>
+    <span class="btn-label">
+      Descargar SonicFlow
+      <small>SonicFlow-Setup-1.0.0.exe · ~154 MB · Windows 10/11</small>
+    </span>
+  </a>
+
+  <div class="hero-meta">
+    <span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      Solo para PC
+    </span>
+    <span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Sin virus · Open source
+    </span>
+    <span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Instalación en 2 min
+    </span>
+  </div>
+
+  <!-- screenshot -->
+  <div class="screenshot-wrap">
+    <img src="Descarga-Sonicflow/assets/screenshot.png" alt="Captura de pantalla de SonicFlow" />
+    <div class="screenshot-glow"></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section">
+  <h2 class="section-title">Todo lo que necesitas</h2>
+  <p class="section-sub">Una sola app para buscar, previsualizar y descargar tu música favorita.</p>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <h3>Búsqueda Inteligente</h3>
+      <p>Pega un link de YouTube o Spotify, o escribe el nombre de un artista. Soporte para playlists completas.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⬇️</div>
+      <h3>MP3 y MP4</h3>
+      <p>Descarga en audio de alta calidad (MP3) o video (MP4). Cola de hasta 2 descargas simultáneas.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎵</div>
+      <h3>Reproductor Integrado</h3>
+      <p>Previsualiza cualquier canción antes de descargar, con controles de play, pausa y barra de progreso.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🖥️</div>
+      <h3>App Nativa para Windows</h3>
+      <p>Instalador .exe con un doble clic. Se agrega al escritorio y menú inicio automáticamente.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📁</div>
+      <h3>Carpeta Personalizada</h3>
+      <p>Elige dónde guardar tus archivos con un selector visual de carpetas integrado en la app.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎨</div>
+      <h3>Interfaz Oscura Premium</h3>
+      <p>Diseño moderno y elegante con animaciones suaves. Minimiza a la bandeja del sistema.</p>
+    </div>
+  </div>
+</section>
+
+<!-- STEPS -->
+<section class="section" style="padding-top:0">
+  <h2 class="section-title">Cómo instalar</h2>
+  <p class="section-sub">Tres pasos y listo — no necesitas saber nada de tecnología.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <h3>Descarga el instalador</h3>
+        <p>Haz clic en el botón de descarga. Se descargará el archivo <code>SonicFlow-Setup-1.0.0.exe</code>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <h3>Ejecuta el instalador</h3>
+        <p>Haz doble clic en el archivo descargado. Si Windows muestra una advertencia, haz clic en <strong>"Más información" → "Ejecutar de todas formas"</strong>. Esto es normal para apps sin firma de pago.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <h3>¡Abre SonicFlow y empieza!</h3>
+        <p>El ícono aparecerá en tu escritorio. Ábrelo, pega un link de YouTube o Spotify y descarga tu música. Así de fácil.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="cta-card">
+    <h2>¿Listo para descargar?</h2>
+    <p>Gratis, rápido y sin anuncios. Solo para Windows 10 y 11.</p>
+    <a id="btn-cta-download"
+       href="https://github.com/Maickel69/app-sonicflow/releases/latest/download/SonicFlow-Setup-1.0.0.exe"
+       class="btn-download" style="display:inline-flex;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      <span class="btn-label">
+        Descargar SonicFlow Gratis
+        <small>Windows 10 / 11 · 64-bit</small>
+      </span>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>
+    © 2025 SonicFlow · Hecho con ❤️ por <strong>Maickel</strong> ·
+    <a href="https://github.com/Maickel69/app-sonicflow" target="_blank" rel="noopener">Ver código fuente</a> ·
+    <a href="SonicFlow/LICENSE.txt">Licencia MIT</a>
+  </p>
+</footer>
+
+</body>
+</html>
